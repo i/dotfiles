@@ -1,41 +1,76 @@
 "" Basic setup
-nnoremap <leader>\ :nohl<CR>
 set nocompatible      " Use vim, no vi defaults
 set number            " Show line numbers
 set ruler             " Show line and column number
-syntax enable         " Turn on syntax highlighting allowing local overrides
 set encoding=utf-8    " Set default encoding to UTF-8
 set mouse=a
-inoremap jj <Esc>
 set pastetoggle=<F10>
-inoremap <C-v> <F10><C-r>+<F10>
-vnoremap <C-c> "+y
-colorscheme fine_blue
-
+syntax enable         " Turn on syntax highlighting allowing local overrides
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
+
+" Remaps
+nnoremap <leader>\ :nohl<CR>
+nnoremap <C-i> :vs<CR>
+nnoremap ;; :
+inoremap <C-v> <F10><C-r>+<F10>
+inoremap jj <Esc>
+noremap <C-y> <C-a>
+noremap <C-[> <C-t>
+vnoremap <C-c> "+y
+noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
+map <C-n> :NERDTreeToggle<CR>
+
 ""Bundles
 Bundle 'kien/ctrlp.vim'
-Bundle 'Lokaltog/vim-powerline'
+Bundle 'JazzCore/ctrlp-cmatcher'
+Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdcommenter'
 Bundle 'vim-ruby/vim-ruby'
+Bundle 'kchmck/vim-coffee-script'
 Bundle 'ervandew/supertab.git'
+Bundle 'flazz/vim-colorschemes'
+"Bundle 'Valloric/YouCompleteMe'
 Bundle 'gmarik/vundle'
-Bundle 'mattn/zencoding-vim'
 Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'scrooloose/syntastic'
+Bundle 'bling/vim-airline'
+Bundle 'mustache/vim-mustache-handlebars'
+Bundle 'tpope/vim-rails'
+Bundle 'digitaltoad/vim-jade'
+Bundle 'jnwhiteh/vim-golang'
+Bundle 'jelera/vim-javascript-syntax'
+Bundle 'FredKSchott/CoVim'
+Bundle 'vim-scripts/loremipsum'
+Bundle 'mattn/emmet-vim'
+Bundle 'tpope/vim-markdown'
+Bundle 'itspriddle/vim-stripper'
 
+""
+let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
+call pathogen#infect()
 
+""CoVim Settings
+let CoVim_default_name = "ian"
+let CoVim_default_port = "8080"
 
+" Use system clipboard
+set clipboard=unnamedplus
 
 set nocompatible   " Disable vi-compatibility
 set laststatus=2   " Always show the statusline
 set encoding=utf-8 " Necessary to show unicode glyphs
 set t_Co=256
-let g:Powerline_symbols = 'fancy'
 
+" Use 256 colors
+if $COLORTERM == 'gnome-terminal'
+    set t_Co=256
+endif
 
 "" Colorscheme
 syntax enable
-
+"colorscheme aiseered
+colorscheme grb256
 "" Whitespace
 filetype plugin indent on
 filetype indent on
@@ -115,5 +150,9 @@ endfu
 nmap <C-_> :call CommentLineANSI()<CR>
 imap <C-_> <C-0> :call CommentLineANSI()<CR>
 vmap <C-_> :call CommentLineANSI()<CR>gv
+highlight Pmenu ctermfg=green ctermbg=black
 
-
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
