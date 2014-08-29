@@ -1,0 +1,32 @@
+[user]
+	email = ian.lozinski@gmail.com
+	name = Ian Lozinski
+[push]
+	default = simple
+[color]
+	ui = auto
+
+[alias]
+  l = log
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  ls = log --stat
+  last = log -1 HEAD
+  w = log --name-status #short whatchanged
+  s = show
+  d = diff
+  df = diff
+  ds = diff --staged
+  st = status
+  ss = status -s
+  ci = commit
+  co = checkout
+  cf = "!git ss | grep UU --color"
+  ccf = "!git ss | grep UU --color | wc -l"
+  br = branch
+  b = branch
+  p = push
+  r = remote
+  unstage = reset HEAD --
+  rh = reset --hard
+  wdiff = diff
+  wc = whatchanged
