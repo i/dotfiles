@@ -14,18 +14,24 @@ nnoremap <leader>\ :nohl<CR>
 nnoremap <C-i> :vs<CR>
 nnoremap ;; :
 inoremap <C-v> <F10><C-r>+<F10>
+inoremap JJ <Esc>
 inoremap jj <Esc>
+inoremap jJ <Esc>
+inoremap Jj <Esc>
+noremap <C-\> <C-t>
 noremap <C-y> <C-a>
-noremap <C-[> <C-t>
 vnoremap <C-c> "+y
 noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
 map <C-n> :NERDTreeToggle<CR>
 
 ""Bundles
 Bundle 'kien/ctrlp.vim'
+Bundle 'pangloss/vim-javascript'
+Bundle 'tpope/vim-endwise'
 Bundle 'JazzCore/ctrlp-cmatcher'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
+Bundle 'rking/ag.vim'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'ervandew/supertab.git'
@@ -33,29 +39,32 @@ Bundle 'flazz/vim-colorschemes'
 "Bundle 'Valloric/YouCompleteMe'
 Bundle 'gmarik/vundle'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'scrooloose/syntastic'
+"Bundle 'scrooloose/syntastic'
 Bundle 'bling/vim-airline'
 Bundle 'mustache/vim-mustache-handlebars'
 Bundle 'tpope/vim-rails'
 Bundle 'digitaltoad/vim-jade'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'jelera/vim-javascript-syntax'
-Bundle 'FredKSchott/CoVim'
 Bundle 'vim-scripts/loremipsum'
 Bundle 'mattn/emmet-vim'
 Bundle 'tpope/vim-markdown'
 Bundle 'itspriddle/vim-stripper'
+Bundle 'mileszs/ack.vim'
+
+" Associate languages with extensions
+au BufNewFile,BufRead *.mustache setlocal ft=mustache
+au BufNewFile,BufRead *.tpl setlocal ft=mustache
 
 ""
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-call pathogen#infect()
 
-""CoVim Settings
-let CoVim_default_name = "ian"
-let CoVim_default_port = "8080"
+" Use ag instead of ack
+let g:ackprg = 'ag --nogroup --nocolor --column'
+
 
 " Use system clipboard
-set clipboard=unnamedplus
+set clipboard=unnamed
 
 set nocompatible   " Disable vi-compatibility
 set laststatus=2   " Always show the statusline
@@ -70,7 +79,7 @@ endif
 "" Colorscheme
 syntax enable
 "colorscheme aiseered
-colorscheme grb256
+colorscheme Tomorrow-Night-Eighties
 "" Whitespace
 filetype plugin indent on
 filetype indent on
@@ -128,6 +137,12 @@ set wildignore+=*.swp,*~,._*
 ""
 "" Backup and swap files
 ""
+
+"Fix clipboard for tmux
+
+if $TMUX
+  set clipboard+=unnamed
+endif
 
 set backupdir=~/.vim/_backup/    " where to put backup files.
 set directory=~/.vim/_temp/      " where to put swap files.
