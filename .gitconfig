@@ -1,10 +1,11 @@
+8tracks/8tracks.com[master*] git add .                                                                                                                                                                                                    [1]
 [user]
-	email = ian.lozinski@gmail.com
-	name = Ian Lozinski
+  email = ian.lozinski@gmail.com
+  name = Ian Lozinski
 [push]
-	default = simple
+  default = simple
 [color]
-	ui = auto
+  ui = auto
 
 [alias]
   l = log
@@ -29,4 +30,4 @@
   unstage = reset HEAD --
   rh = reset --hard
   wdiff = diff
-  wc = whatchanged
+  wc ="whatchanged --since=\"1 day ago\" -p"
