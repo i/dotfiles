@@ -2,6 +2,7 @@
 set nocompatible      " Use vim, no vi defaults
 set number            " Show line numbers
 set ruler             " Show line and column number
+set cursorcolumn
 set encoding=utf-8    " Set default encoding to UTF-8
 set mouse=a
 set pastetoggle=<F10>
@@ -18,8 +19,12 @@ inoremap JJ <Esc>
 inoremap jj <Esc>
 inoremap jJ <Esc>
 inoremap Jj <Esc>
-noremap <C-\> <C-t>
-noremap <C-y> <C-a>
+
+"Shift lines up or down
+noremap <C-j> ddp
+noremap <C-k> ddkkp
+
+noremap <C-b> :buffers<CR>
 vnoremap <C-c> "+y
 noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
 map <C-n> :NERDTreeToggle<CR>
@@ -34,12 +39,12 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'rking/ag.vim'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'kchmck/vim-coffee-script'
-Bundle 'ervandew/supertab.git'
 Bundle 'flazz/vim-colorschemes'
+Bundle 'ervandew/supertab.git'
 "Bundle 'Valloric/YouCompleteMe'
 Bundle 'gmarik/vundle'
 Bundle 'nathanaelkane/vim-indent-guides'
-"Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/syntastic'
 Bundle 'bling/vim-airline'
 Bundle 'mustache/vim-mustache-handlebars'
 Bundle 'tpope/vim-rails'
@@ -79,7 +84,8 @@ endif
 "" Colorscheme
 syntax enable
 "colorscheme aiseered
-colorscheme Tomorrow-Night-Eighties
+" colorscheme Tomorrow-Night-Eighties
+colorscheme bclear
 "" Whitespace
 filetype plugin indent on
 filetype indent on
