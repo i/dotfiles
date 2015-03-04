@@ -2,7 +2,11 @@
 set nocompatible      " Use vim, no vi defaults
 set number            " Show line numbers
 set ruler             " Show line and column number
-set cursorcolumn
+set cursorcolumn      " Show vertical line
+set cursorline
+set shell=zsh\ -l
+hi CursorLine       guifg=NONE        guibg=#121212     gui=NONE
+
 set encoding=utf-8    " Set default encoding to UTF-8
 set mouse=a
 set pastetoggle=<F10>
@@ -11,9 +15,35 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " Remaps
-nnoremap <leader>\ :nohl<CR>
+nnoremap \\ :nohl<CR>
+" Ruby stuff
+nnoremap <leader>t :! ruby -Itest %<CR>
+nnoremap <leader>r :! ruby %<CR>
+
+" Source vimrc
+nnoremap <leader>ss :source ~/.vimrc<CR>
+
+" Go run / test
+nnoremap <leader>gr :! go run %<CR>
+nnoremap <leader>gt :! go test<CR>
+
+" Format html
+nnoremap <leader>ht :set filetype=html<cr>ggVGJ:%s/>\s*</>\r</g<CR>gg=G
+
+" Wrap line in quotes
+nnoremap <leader>ww :call Wrap()<CR>j
+nnoremap <leader>w, :call WrapWithComma()<CR>j
+function Wrap()
+  normal I"
+  normal A"
+endfunction
+function WrapWithComma()
+  normal I"
+  normal A",
+endfunction
+
 nnoremap <C-i> :vs<CR>
-nnoremap ;; :
+nnoremap ; :
 inoremap <C-v> <F10><C-r>+<F10>
 inoremap JJ <Esc>
 inoremap jj <Esc>
@@ -26,7 +56,7 @@ noremap <C-k> ddkkp
 
 noremap <C-b> :buffers<CR>
 vnoremap <C-c> "+y
-noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
+"noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
 map <C-n> :NERDTreeToggle<CR>
 
 ""Bundles
@@ -37,6 +67,9 @@ Bundle 'JazzCore/ctrlp-cmatcher'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'rking/ag.vim'
+Plugin 'elzr/vim-json'
+Bundle 'airblade/vim-gitgutter'
+Bundle 'tpope/vim-fugitive'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'flazz/vim-colorschemes'
@@ -49,17 +82,22 @@ Bundle 'bling/vim-airline'
 Bundle 'mustache/vim-mustache-handlebars'
 Bundle 'tpope/vim-rails'
 Bundle 'digitaltoad/vim-jade'
-Bundle 'jnwhiteh/vim-golang'
 Bundle 'jelera/vim-javascript-syntax'
+Bundle 'fatih/vim-go'
 Bundle 'vim-scripts/loremipsum'
 Bundle 'mattn/emmet-vim'
 Bundle 'tpope/vim-markdown'
 Bundle 'itspriddle/vim-stripper'
 Bundle 'mileszs/ack.vim'
 
-" Associate languages with extensions
+" Associate language syntax with file extensions
+au BufNewFile,BufRead *.go setlocal ft=go
 au BufNewFile,BufRead *.mustache setlocal ft=mustache
 au BufNewFile,BufRead *.tpl setlocal ft=mustache
+au BufNewFile,BufRead *.hbs setlocal ft=mustache
+au BufNewFile,BufRead *.handlebars setlocal ft=mustache
+au BufNewFile,BufRead *.js.es6 setlocal ft=javascript
+au BufNewFile,BufRead *json setlocal ft=json
 
 ""
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
@@ -84,8 +122,10 @@ endif
 "" Colorscheme
 syntax enable
 "colorscheme aiseered
-" colorscheme Tomorrow-Night-Eighties
-colorscheme bclear
+"colorscheme Tomorrow-Night-Eighties
+colorscheme ian
+" colorscheme bclear
+
 "" Whitespace
 filetype plugin indent on
 filetype indent on
@@ -140,10 +180,6 @@ set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
 " Disable temp and backup files
 set wildignore+=*.swp,*~,._*
 
-""
-"" Backup and swap files
-""
-
 "Fix clipboard for tmux
 
 if $TMUX
@@ -154,23 +190,6 @@ set backupdir=~/.vim/_backup/    " where to put backup files.
 set directory=~/.vim/_temp/      " where to put swap files.
 
 au Filetype make setlocal noexpandtab
-
-"comment lines
-fu! CommentLineANSI()
-  if empty(matchstr(getline('.'),'^\s*/\*.*\*/\s*'))
-    :s/^\(.*\)$/\/*\1*\//
-  else
-    :s/^\/\*\(.*\)\*\//\1/
-  endif
-  :silen!
-endfunction
-fu! CommentBlock()
-  :'< s/^/\/*/
-  :'> s/$/*\//
-endfu
-nmap <C-_> :call CommentLineANSI()<CR>
-imap <C-_> <C-0> :call CommentLineANSI()<CR>
-vmap <C-_> :call CommentLineANSI()<CR>gv
 highlight Pmenu ctermfg=green ctermbg=black
 
 set guioptions-=m  "remove menu bar
