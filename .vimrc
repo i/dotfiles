@@ -33,6 +33,10 @@ nnoremap <leader>ht :set filetype=html<cr>ggVGJ:%s/>\s*</>\r</g<CR>gg=G
 " Wrap line in quotes
 nnoremap <leader>ww :call Wrap()<CR>j
 nnoremap <leader>w, :call WrapWithComma()<CR>j
+nnoremap <leader>,  :call AddComma()<CR>j
+function AddComma()
+  normal A,
+endfunction
 function Wrap()
   normal I"
   normal A"
@@ -41,6 +45,8 @@ function WrapWithComma()
   normal I"
   normal A",
 endfunction
+
+nnoremap <leader>y :.!pbcopy
 
 nnoremap <C-i> :vs<CR>
 nnoremap ; :
@@ -179,6 +185,10 @@ set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
 
 " Disable temp and backup files
 set wildignore+=*.swp,*~,._*
+
+""
+"" Backup and swap files
+""
 
 "Fix clipboard for tmux
 
