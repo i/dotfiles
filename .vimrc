@@ -14,14 +14,17 @@ syntax enable         " Turn on syntax highlighting allowing local overrides
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" Remaps
+nnoremap <leader>ss :source ~/.vimrc<CR>
 nnoremap \\ :nohl<CR>
+nnoremap <leader>j :bnext<CR>
+nnoremap <leader>k :bprevious<CR>
+vnoremap <leader>f :fold<CR>
+nnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>f yiw:Ag <C-r>"<CR>
+
 " Ruby stuff
 nnoremap <leader>t :! ruby -Itest %<CR>
 nnoremap <leader>r :! ruby %<CR>
-
-" Source vimrc
-nnoremap <leader>ss :source ~/.vimrc<CR>
 
 " Go run / test
 nnoremap <leader>gr :! go run %<CR>
@@ -34,19 +37,21 @@ nnoremap <leader>ht :set filetype=html<cr>ggVGJ:%s/>\s*</>\r</g<CR>gg=G
 nnoremap <leader>ww :call Wrap()<CR>j
 nnoremap <leader>w, :call WrapWithComma()<CR>j
 nnoremap <leader>,  :call AddComma()<CR>j
-function AddComma()
+
+function! AddComma()
   normal A,
 endfunction
-function Wrap()
+
+function! Wrap()
   normal I"
   normal A"
 endfunction
-function WrapWithComma()
+
+function! WrapWithComma()
   normal I"
   normal A",
 endfunction
 
-nnoremap <leader>y :.!pbcopy
 
 nnoremap <C-i> :vs<CR>
 nnoremap ; :
@@ -206,3 +211,23 @@ set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
+
+" Escape/unescape & < > HTML entities in range (default current line).
+function! HtmlEntities(line1, line2, action)
+  let search = @/
+  let range = 'silent ' . a:line1 . ',' . a:line2
+  if a:action == 0  " must convert &amp; last
+    execute range . 'sno/&lt;/</eg'
+    execute range . 'sno/&gt;/>/eg'
+    execute range . 'sno/&amp;/&/eg'
+  else              " must convert & first
+    execute range . 'sno/&/&amp;/eg'
+    execute range . 'sno/</&lt;/eg'
+    execute range . 'sno/>/&gt;/eg'
+  endif
+  nohl
+  let @/ = search
+endfunction
+command! -range -nargs=1 Entities call HtmlEntities(<line1>, <line2>, <args>)
+noremap <silent> \h :Entities 0<CR>
+noremap <silent> \H :Entities 1<CR>
