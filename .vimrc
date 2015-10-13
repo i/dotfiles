@@ -11,24 +11,32 @@ set encoding=utf-8    " Set default encoding to UTF-8
 set mouse=a
 set pastetoggle=<F10>
 syntax enable         " Turn on syntax highlighting allowing local overrides
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+
 
 nnoremap <leader>ss :source ~/.vimrc<CR>
 nnoremap \\ :nohl<CR>
 nnoremap <leader>j :bnext<CR>
 nnoremap <leader>k :bprevious<CR>
-vnoremap <leader>f :fold<CR>
 nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>f yiw:Ag <C-r>"<CR>
+nnoremap <leader>nn :set nonumber<CR>
+nnoremap <leader>sn :set number<CR>
+noremap L $
+noremap H 0
+vnoremap <leader>f :fold<CR>
+vnoremap <leader>r "hy:%s/<C-r>h//gc<left><left><left>
 
 " Ruby stuff
 nnoremap <leader>t :! ruby -Itest %<CR>
 nnoremap <leader>r :! ruby %<CR>
 
-" Go run / test
+" Go stuff
 nnoremap <leader>gr :! go run %<CR>
 nnoremap <leader>gt :! go test<CR>
+nnoremap <leader>gi :GoImports<CR>
+
+set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+
 
 " Format html
 nnoremap <leader>ht :set filetype=html<cr>ggVGJ:%s/>\s*</>\r</g<CR>gg=G
@@ -63,52 +71,68 @@ inoremap Jj <Esc>
 
 "Shift lines up or down
 noremap <C-j> ddp
-noremap <C-k> ddkkp
+noremap <C-k> kddpk
+noremap <C-h> hxph
+noremap <C-l> xp
 
 noremap <C-b> :buffers<CR>
 vnoremap <C-c> "+y
 "noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
 map <C-n> :NERDTreeToggle<CR>
 
+" Vundle
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
 ""Bundles
-Bundle 'kien/ctrlp.vim'
-Bundle 'pangloss/vim-javascript'
-Bundle 'tpope/vim-endwise'
-Bundle 'JazzCore/ctrlp-cmatcher'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'rking/ag.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'gf3/peg.vim'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'gmarik/vundle'
+Plugin 'kien/ctrlp.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'tpope/vim-endwise'
+Plugin 'JazzCore/ctrlp-cmatcher'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'rking/ag.vim'
+Plugin 'solarnz/thrift.vim'
 Plugin 'elzr/vim-json'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'tpope/vim-fugitive'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'flazz/vim-colorschemes'
-Bundle 'ervandew/supertab.git'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'kchmck/vim-coffee-script'
+"Plugin 'flazz/vim-colorschemes'
+Plugin 'ervandew/supertab.git'
 "Bundle 'Valloric/YouCompleteMe'
-Bundle 'gmarik/vundle'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'scrooloose/syntastic'
-Bundle 'bling/vim-airline'
-Bundle 'mustache/vim-mustache-handlebars'
-Bundle 'tpope/vim-rails'
-Bundle 'digitaltoad/vim-jade'
-Bundle 'jelera/vim-javascript-syntax'
-Bundle 'fatih/vim-go'
-Bundle 'vim-scripts/loremipsum'
-Bundle 'mattn/emmet-vim'
-Bundle 'tpope/vim-markdown'
-Bundle 'itspriddle/vim-stripper'
-Bundle 'mileszs/ack.vim'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'scrooloose/syntastic'
+Plugin 'bling/vim-airline'
+Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'tpope/vim-rails'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'fatih/vim-go'
+Plugin 'vim-scripts/loremipsum'
+Plugin 'mattn/emmet-vim'
+Plugin 'itspriddle/vim-stripper'
+Plugin 'mileszs/ack.vim'
+
+call vundle#end()
+filetype plugin indent on
+
 
 " Associate language syntax with file extensions
-au BufNewFile,BufRead *.go setlocal ft=go
-au BufNewFile,BufRead *.mustache setlocal ft=mustache
-au BufNewFile,BufRead *.tpl setlocal ft=mustache
-au BufNewFile,BufRead *.hbs setlocal ft=mustache
+au BufNewFile,BufRead *.go         setlocal ft=go
+au BufNewFile,BufRead *.mustache   setlocal ft=mustache
+au BufNewFile,BufRead *.tpl        setlocal ft=mustache
+au BufNewFile,BufRead *.hbs        setlocal ft=mustache
 au BufNewFile,BufRead *.handlebars setlocal ft=mustache
-au BufNewFile,BufRead *.js.es6 setlocal ft=javascript
-au BufNewFile,BufRead *json setlocal ft=json
+au BufNewFile,BufRead *.js.es6     setlocal ft=javascript
+au BufNewFile,BufRead *.pp         setlocal ft=ruby
+au BufNewFile,BufRead .arcconfig   setlocal ft=json
+au BufNewFile,BufRead *json        setlocal ft=json
 
 ""
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
@@ -117,12 +141,10 @@ let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 let g:ackprg = 'ag --nogroup --nocolor --column'
 
 
-" Use system clipboard
-set clipboard=unnamed
-
-set nocompatible   " Disable vi-compatibility
-set laststatus=2   " Always show the statusline
-set encoding=utf-8 " Necessary to show unicode glyphs
+set clipboard=unnamed " Use system clipboard
+set nocompatible      " Disable vi-compatibility
+set laststatus=2      " Always show the statusline
+set encoding=utf-8    " Necessary to show unicode glyphs
 set t_Co=256
 
 " Use 256 colors
@@ -135,10 +157,10 @@ syntax enable
 "colorscheme aiseered
 "colorscheme Tomorrow-Night-Eighties
 colorscheme ian
+hi Normal ctermbg=none
 " colorscheme bclear
 
 "" Whitespace
-filetype plugin indent on
 filetype indent on
 
 set nowrap                        " don't wrap lines
