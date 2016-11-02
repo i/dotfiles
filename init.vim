@@ -1,108 +1,29 @@
 "" Basic setup
-set nocompatible      " Use vim, no vi defaults
 set number            " Show line numbers
 set ruler             " Show line and column number
 set cursorcolumn      " Show vertical line
 set cursorline
-set shell=zsh\ -l
+"set shell=zsh\ -l
 hi CursorLine       guifg=NONE        guibg=#121212     gui=NONE
 
 "set encoding=utf-8    " Set default encoding to UTF-8
 set mouse=a
 set pastetoggle=<F10>
 
-nnoremap <leader>pp <F10>
-nnoremap <leader>gm :exec GoMain()<CR>ggddGkw
-nnoremap <leader>ss :source ~/.vimrc<CR>
-nnoremap \\ :nohl<CR>
-nnoremap <leader>j :bnext<CR>
-nnoremap <leader>k :bprevious<CR>
-nnoremap <leader>gb :Gblame<CR>
-nnoremap <leader>f yiw:Ag <C-r>"<CR>
-nnoremap <leader>nn :set nu!<CR>
-nnoremap <leader>sn :set number<CR>
-nnoremap <leader>q @a
-noremap L $
-noremap H 0
-vnoremap <leader>f :fold<CR>
-vnoremap <leader>r "hy:%s/<C-r>h//gc<left><left><left>
-vnoremap <C-p> :CommandT<CR>
-
-" Ruby stuff
-nnoremap <leader>t :! ruby -Itest %<CR>
-nnoremap <leader>r :! ruby %<CR>
-
-" Go stuff
-nnoremap <leader>gr :! go run %<CR>
-nnoremap <leader>gt :! go test -race -cover<CR>
-nnoremap <leader>gi :GoImports<CR>
-
-" Python stuff
-nnoremap <leader>pr :!python %<CR>
-
-set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-
-
-" Format html
-nnoremap <leader>ht :set filetype=html<cr>ggVGJ:%s/>\s*</>\r</g<CR>gg=G
-
-" Wrap line in quotes
-nnoremap <leader>ww :call Wrap()<CR>j
-nnoremap <leader>w, :call WrapWithComma()<CR>j
-nnoremap <leader>,  :call AddComma()<CR>j
-
-function! AddComma()
-  normal A,
-endfunction
-
-function! Wrap()
-  normal I"
-  normal A"
-endfunction
-
-function! WrapWithComma()
-  normal I"
-  normal A",
-endfunction
-
-
-nnoremap <C-i> :vs<CR>
-nnoremap ; :
-inoremap <C-v> <F10><C-r>+<F10>
-inoremap JJ <Esc>
-inoremap jj <Esc>
-inoremap jJ <Esc>
-inoremap Jj <Esc>
-
-"Shift lines up or down
-noremap <C-j> ddp
-noremap <C-k> kddpk
-noremap <C-h> hxph
-noremap <C-l> xp
-
-noremap <C-b> :buffers<CR>
-vnoremap <C-c> "+y
-"noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
-map <C-n> :NERDTreeToggle<CR>
-
 " Vundle
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.config/nvim/Vundle.vim
 call vundle#begin()
 
 ""Bundles
-Plugin 'tpope/vim-fireplace'
+Plugin 'neomake/neomake'
 Plugin 'avakhov/vim-yaml'
 Plugin 'elubow/cql-vim'
-Plugin 'godlygeek/tabular'
 Plugin 'gf3/peg.vim'
 Plugin 'gmarik/vundle'
 Plugin 'ctrlpvim/ctrlp.vim'
-"Plugin 'pangloss/vim-javascript'
 Plugin 'moll/vim-node'
 Plugin 'tpope/vim-endwise'
-Plugin 'JazzCore/ctrlp-cmatcher'
-"Plugin 'wincent/command-t'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'rking/ag.vim'
@@ -110,11 +31,7 @@ Plugin 'solarnz/thrift.vim'
 Plugin 'elzr/vim-json'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'kchmck/vim-coffee-script'
-"Plugin 'flazz/vim-colorschemes'
 Plugin 'ervandew/supertab.git'
-"Bundle 'Valloric/YouCompleteMe'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'scrooloose/syntastic'
 Plugin 'bling/vim-airline'
@@ -126,7 +43,6 @@ Plugin 'fatih/vim-go'
 Plugin 'vim-scripts/loremipsum'
 Plugin 'mattn/emmet-vim'
 Plugin 'itspriddle/vim-stripper'
-Plugin 'mileszs/ack.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -145,15 +61,8 @@ au BufNewFile,BufRead *.pp         setlocal ft=ruby
 au BufNewFile,BufRead .arcconfig   setlocal ft=json
 au BufNewFile,BufRead *json        setlocal ft=json
 
-""
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-
 " Use ag instead of ack
 let g:ackprg = 'ag --nogroup --nocolor --column'
-
-" Get rid of vim-json weirdness
-let g:vim_json_syntax_conceal = 0
-
 
 set clipboard=unnamed " Use system clipboard
 set nocompatible      " Disable vi-compatibility
@@ -269,7 +178,100 @@ noremap <silent> \h :Entities 0<CR>
 noremap <silent> \H :Entities 1<CR>
 
 function! GoMain()
-    r/Users/ian/go/src/main_template/main.go
+    r/Users/ian/go/src/templates/main.go
 endfunction
 
+function! GoNewTest()
+    r/Users/ian/go/src/templates/new_test.go
+endfunction
+
+function! GoNewBench()
+    r/Users/ian/go/src/templates/new_bench.go
+endfunction
+
+
 colorscheme ian
+
+" search for highlighted text with //
+vnoremap // y/<C-R>"<CR>
+
+:tnoremap <Esc> <C-\><C-n>
+:tnoremap jj <C-\><C-n>
+
+nnoremap <leader>pp <F10>
+nnoremap <leader>gm :exec GoMain()<CR>ggddGkw
+nnoremap <leader>gnt :exec GoNewTest()<CR>G
+nnoremap <leader>gnb :exec GoNewBench()<CR>G
+nnoremap <leader>ss :source ~/.config/nvim/init.vim<CR>
+nnoremap \\ :nohl<CR>
+nnoremap <leader>j :bnext<CR>
+nnoremap <leader>k :bprevious<CR>
+nnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>f yiw:Ag <C-r>"<CR>
+nnoremap <leader>nn :set nu!<CR>
+nnoremap <leader>sn :set number<CR>
+nnoremap <leader>q @a
+noremap L $
+noremap H 0
+vnoremap <leader>f :fold<CR>
+vnoremap <leader>r "hy:%s/<C-r>h//gc<left><left><left>
+vnoremap <C-p> :CommandT<CR>
+
+" Ruby stuff
+nnoremap <leader>t :! ruby -Itest %<CR>
+nnoremap <leader>r :! ruby %<CR>
+
+" Go stuff
+nnoremap <leader>gr :GoRun<CR>
+nnoremap <leader>gt :! go test -race -cover<CR>
+nnoremap <leader>gi :GoImports<CR>
+
+" Python stuff
+nnoremap <leader>pr :!python %<CR>
+
+set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+
+
+" Format html
+nnoremap <leader>ht :set filetype=html<cr>ggVGJ:%s/>\s*</>\r</g<CR>gg=G
+
+" Wrap line in quotes
+nnoremap <leader>ww :call Wrap()<CR>j
+nnoremap <leader>w, :call WrapWithComma()<CR>j
+nnoremap <leader>,  :call AddComma()<CR>j
+
+function! AddComma()
+  normal A,
+endfunction
+
+function! Wrap()
+  normal I"
+  normal A"
+endfunction
+
+function! WrapWithComma()
+  normal I"
+  normal A",
+endfunction
+
+
+nnoremap <C-i> :vs<CR>
+nnoremap ; :
+inoremap <C-v> <F10><C-r>+<F10>
+inoremap JJ <Esc>
+inoremap jj <Esc>
+inoremap jJ <Esc>
+inoremap Jj <Esc>
+
+"Shift lines up or down
+noremap <C-j> ddp
+noremap <C-k> kddpk
+noremap <C-h> hxph
+noremap <C-l> xp
+
+noremap <C-b> :buffers<CR>
+vnoremap <C-c> "+y
+"noremap   <buffer> K      :s,^\(\s*\)[^# \t]\@=,\1#,e<CR>:nohls<CR>zvj
+map <C-n> :NERDTreeToggle<CR>
+
+autocmd! BufWritePost,BufEnter * Neomake
